@@ -11,10 +11,6 @@ function TailwindPurgeClasses() {
       <div className="from-blue-600"></div>
       <div className="from-green-600"></div>
       <div className="from-yellow-600"></div>
-      <div className="bg-red-950"></div>
-      <div className="bg-blue-950"></div>
-      <div className="bg-green-950"></div>
-      <div className="bg-yellow-950"></div>
     </div>
   );
 }
