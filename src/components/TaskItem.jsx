@@ -15,7 +15,7 @@ function TaskItem({ color }) {
         className={`task-inner flex gap-4 items-center bg-gradient-to-r from-slate-950/75 to-slate-900 to-80% hover:from-slate-950/60 hover:to-slate-900 hover:to-100% py-1 px-4 rounded-xl h-14 overflow-hidden`}
         style={collapsed ? {} : { height: "100%" }}
       >
-        <input type="radio" name="" id="" />
+        <input type="radio" className="scale-150" />
         <div className="text w-full overflow-hidden">
           <h3
             className={`overflow-hidden font-semibold text-lg text-${color}-500 ${
@@ -25,7 +25,7 @@ function TaskItem({ color }) {
             Task title Lorem ipsum dolor sit amet, consectetur
           </h3>
           <p
-            className={`overflow-hidden opacity-70 text-sm ${
+            className={`overflow-hidden opacity-70 text-sm px-2 ${
               collapsed ? "text-nowrap text-ellipsis" : ""
             }`}
           >
@@ -33,8 +33,20 @@ function TaskItem({ color }) {
             adipisicing elit. Nihil repellendus consectetur ex corrupti impedit
             quae earum incidunt cumque ut velit?
           </p>
+          {collapsed ? (
+            ""
+          ) : (
+            <div className="options flex justify-between my-2">
+              <button className="edit w-28 rounded py-1 font-semibold bg-blue-600">
+                Edit
+              </button>
+              <button className="delete w-28 rounded py-1 font-semibold bg-red-600">
+                Delete
+              </button>
+            </div>
+          )}
         </div>
-        <FaCaretDown className="text-2xl" />
+        <FaCaretDown className={`text-2xl ${collapsed ? "" : "rotate-180"}`} />
       </div>
     </div>
   );
