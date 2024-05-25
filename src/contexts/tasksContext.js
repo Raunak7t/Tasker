@@ -9,6 +9,7 @@ export const tasksContext = createContext({
       task: "",
       desc: "",
       isDone: true,
+      color: "",
     },
   ],
   addTask: (task, desc) => {},

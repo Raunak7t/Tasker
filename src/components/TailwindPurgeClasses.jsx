@@ -7,10 +7,12 @@ function TailwindPurgeClasses() {
       <div className=" text-blue-500"></div>
       <div className=" text-green-500"></div>
       <div className=" text-yellow-500"></div>
+      <div className=" text-slate-500"></div>
       <div className="from-red-600"></div>
       <div className="from-blue-600"></div>
       <div className="from-green-600"></div>
       <div className="from-yellow-600"></div>
+      <div className="from-slate-600"></div>
     </div>
   );
 }

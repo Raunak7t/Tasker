@@ -1,14 +1,38 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { FaCaretDown } from "react-icons/fa";
+import { useTasks } from "../contexts";
 
-function TaskItem({ color }) {
+function TaskItem({ task }) {
+  const [editable, setEditable] = useState(false);
   const [collapsed, setCollapsed] = useState(true);
+  // const [isDone, setIsDone] = useState(task.isDone);
+
+  const color = task.isDone ? "slate" : task.color;
+
+  const taskRef = useRef(null);
+  const descRef = useRef(null);
+
+  const { updateTask, deleteTask, toggleTaskStatus } = useTasks();
+
+  const save = () => {
+    updateTask(task.id, taskRef.current.innerText, descRef.current.innerText);
+    setEditable(false);
+    setCollapsed(true);
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+    }
+  };
+
   const toggleCollapse = () => {
     setCollapsed(!collapsed);
   };
+
   return (
     <div
-      className={`task-outer mb-3 bg-gradient-to-r from-${color}-600 to-slate-700 to-70% hover:to-100% p-px rounded-xl ${
+      className={` task-outer mb-3 bg-gradient-to-r from-${color}-600 to-slate-700 to-70% hover:to-100% p-px rounded-xl ${
         collapsed ? "cursor-pointer" : ""
       }`}
       onClick={collapsed ? toggleCollapse : null}
@@ -21,33 +45,62 @@ function TaskItem({ color }) {
       >
         <input
           type="checkbox"
+          checked={task.isDone}
           className={`scale-125 duration-0  ${collapsed ? "" : "mt-4"}`}
+          onChange={() => {
+            toggleTaskStatus(task.id);
+          }}
         />
         <div className="text w-full overflow-hidden">
           <h3
+            ref={taskRef}
             className={`overflow-hidden font-semibold text-lg text-${color}-500 ${
-              collapsed ? "text-nowrap text-ellipsis" : ""
+              collapsed ? "truncate" : ""
+            } ${task.isDone && "line-through"} ${
+              editable && "bg-slate-700/40 px-1 border rounded-lg"
             }`}
-          >
-            Task title Lorem ipsum dolor sit amet, consectetur
-          </h3>
+            contentEditable={editable}
+            onKeyDown={editable ? handleKeyDown : undefined}
+            suppressContentEditableWarning={true}
+            dangerouslySetInnerHTML={{ __html: task.task }}
+          ></h3>
           <p
-            className={`overflow-hidden opacity-70 text-sm px-1 ${
-              collapsed ? "text-nowrap text-ellipsis" : ""
+            ref={descRef}
+            className={`overflow-hidden opacity-70 text-sm px-1 block ${
+              collapsed ? "truncate" : ""
+            }  ${task.isDone && `line-through text-${color}-500`}  ${
+              editable && "bg-slate-700/40 border rounded-lg mt-1"
             }`}
-          >
-            Task Description {color} Lorem ipsum dolor sit amet consectetur
-            adipisicing elit. Nihil repellendus consectetur ex corrupti impedit
-            quae earum incidunt cumque ut velit?
-          </p>
-          {collapsed ? (
-            ""
-          ) : (
+            contentEditable={editable}
+            onKeyDown={editable ? handleKeyDown : undefined}
+            suppressContentEditableWarning={true}
+            dangerouslySetInnerHTML={{ __html: task.desc }}
+          ></p>
+          {!collapsed && (
             <div className="options flex justify-between my-2">
-              <button className="edit w-28 rounded py-1 font-semibold bg-blue-600">
-                Edit
-              </button>
-              <button className="delete w-28 rounded py-1 font-semibold bg-red-600">
+              {editable ? (
+                <button
+                  className="edit w-28 rounded py-1 font-semibold bg-green-600"
+                  onClick={save}
+                >
+                  Save
+                </button>
+              ) : (
+                <button
+                  className="edit w-28 rounded py-1 font-semibold bg-blue-600"
+                  onClick={() => {
+                    setEditable(true);
+                  }}
+                >
+                  Edit
+                </button>
+              )}
+              <button
+                className="delete w-28 rounded py-1 font-semibold bg-red-600"
+                onClick={() => {
+                  deleteTask(task.id);
+                }}
+              >
                 Delete
               </button>
             </div>
@@ -57,7 +110,7 @@ function TaskItem({ color }) {
           className={`text-3xl cursor-pointer ${
             collapsed ? "" : "mt-2 rotate-180"
           }`}
-          onClick={toggleCollapse}
+          onClick={editable ? save : toggleCollapse}
         />
       </div>
     </div>

@@ -1,22 +1,59 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import TaskItem from "./components/TaskItem";
 import TailwindPurgeClasses from "./components/TailwindPurgeClasses";
 import { TasksProvider } from "./contexts";
 import Top from "./components/Top";
+import { PiArrowBendRightUpBold } from "react-icons/pi";
 
 function App() {
   const [addTaskActive, setAddTaskActive] = useState(false);
-
-  const [userName, setUserName] = useState("Raunak");
-  const updateUserName = (evt) => {
-    setUserName(evt.target.value);
-  };
-
+  const [userName, setUserName] = useState("");
   const [tasks, setTasks] = useState([]);
-  console.log(tasks);
-  const addTask = (task, desc) => {
-    setTasks((prev) => [{ id: Date.now(), task, desc }, ...prev]);
+
+  const updateUserName = (name) => {
+    setUserName(name);
   };
+
+  const addTask = (task, desc) => {
+    setTasks((prev) => [
+      { id: Date.now(), task, desc, isDone: false, color: getRandomColor() },
+      ...prev,
+    ]);
+    setAddTaskActive(false);
+  };
+
+  const updateTask = (id, task, desc) => {
+    setTasks((prev) =>
+      prev.map((t) => {
+        return t.id === id ? { ...t, task, desc } : t;
+      })
+    );
+  };
+
+  const deleteTask = (id) => {
+    setTasks((prev) => prev.filter((t) => id !== t.id));
+  };
+
+  const toggleTaskStatus = (id) => {
+    setTasks((prev) =>
+      prev.map((t) => (t.id === id ? { ...t, isDone: !t.isDone } : t))
+    );
+  };
+
+  const getRandomColor = () => {
+    const colors = ["red", "blue", "yellow", "green"];
+    return colors[Math.floor(Math.random() * colors.length)];
+  };
+
+  useEffect(() => {
+    let allData = JSON.parse(localStorage.getItem("taskerData"));
+    updateUserName(allData.userName);
+    if (allData && allData.tasks.length > 0) setTasks(allData.tasks);
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("taskerData", JSON.stringify({ userName, tasks }));
+  }, [tasks, userName]);
 
   return (
     <TasksProvider
@@ -25,9 +62,9 @@ function App() {
         updateUserName,
         tasks,
         addTask,
-        // updateTask,
-        // deleteTask,
-        // toggleTaskStatus,
+        updateTask,
+        deleteTask,
+        toggleTaskStatus,
       }}
     >
       <TailwindPurgeClasses />
@@ -43,13 +80,19 @@ function App() {
           } content overflow-y-scroll h-full pr-2 pb-16`}
         >
           <p className="opacity-70 text-sm mb-2">
-            Tasks: <span>69</span>
+            Tasks: <span>{tasks.length}</span>
           </p>
           <div className="all-tasks">
-            <TaskItem color="red" />
-            <TaskItem color="yellow" />
-            <TaskItem color="blue" />
-            <TaskItem color="green" />
+            {tasks.length ? (
+              tasks.map((task) => {
+                return <TaskItem key={task.id} task={task} />;
+              })
+            ) : (
+              <h1 className="pl-7 font-semibold text-xl flex justify-center items-baseline">
+                No task to do. Keep adding
+                <PiArrowBendRightUpBold className="text-4xl" />
+              </h1>
+            )}
           </div>
         </div>
       </div>
