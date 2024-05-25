@@ -6,7 +6,7 @@ import { RxCross2 } from "react-icons/rx";
 import AddTask from "./AddTask";
 
 function Top({ addTaskActive, setAddTaskActive }) {
-  const { userName, updateUserName, addTask } = useTasks();
+  const { userName, setUserName, addTask } = useTasks();
 
   const [name, setName] = useState(userName);
   const [nameEditable, setNameEditable] = useState(false);
@@ -43,7 +43,7 @@ function Top({ addTaskActive, setAddTaskActive }) {
               <FaSave
                 onClick={() => {
                   setNameEditable(false);
-                  updateUserName(name);
+                  setUserName(name);
                 }}
               />
             ) : (

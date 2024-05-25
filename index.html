@@ -2,14 +2,27 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/Tasker-logo.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="manifest" href="/site.webmanifest" />
     <title>Tasker</title>
   </head>
   <body>
     <div
       id="root"
       class="bg-slate-700 h-screen flex items-center justify-center"
+      style="
+        background: linear-gradient(
+            to bottom right,
+            rgba(15, 10, 37, 0.651),
+            rgba(26, 33, 48, 0.402)
+          ),
+          url('/bg.jpg');
+        background-size: cover;
+        background-attachment: fixed;
+      "
     ></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

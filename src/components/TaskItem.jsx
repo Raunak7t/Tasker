@@ -5,7 +5,6 @@ import { useTasks } from "../contexts";
 function TaskItem({ task }) {
   const [editable, setEditable] = useState(false);
   const [collapsed, setCollapsed] = useState(true);
-  // const [isDone, setIsDone] = useState(task.isDone);
 
   const color = task.isDone ? "slate" : task.color;
 
@@ -35,7 +34,7 @@ function TaskItem({ task }) {
       className={` task-outer mb-3 bg-gradient-to-r from-${color}-600 to-slate-700 to-70% hover:to-100% p-px rounded-xl ${
         collapsed ? "cursor-pointer" : ""
       }`}
-      onClick={collapsed ? toggleCollapse : null}
+      onClick={!editable ? toggleCollapse : null}
     >
       <div
         className={`task-inner flex gap-4  ${
@@ -45,9 +44,12 @@ function TaskItem({ task }) {
       >
         <input
           type="checkbox"
-          checked={task.isDone}
-          className={`scale-125 duration-0  ${collapsed ? "" : "mt-4"}`}
-          onChange={() => {
+          defaultChecked={task.isDone}
+          className={`scale-125 duration-0 cursor-pointer ${
+            collapsed ? "" : "mt-4"
+          }`}
+          onClick={(e) => {
+            e.stopPropagation();
             toggleTaskStatus(task.id);
           }}
         />
@@ -88,7 +90,8 @@ function TaskItem({ task }) {
               ) : (
                 <button
                   className="edit w-28 rounded py-1 font-semibold bg-blue-600"
-                  onClick={() => {
+                  onClick={(e) => {
+                    e.stopPropagation();
                     setEditable(true);
                   }}
                 >

@@ -4,15 +4,12 @@ import TailwindPurgeClasses from "./components/TailwindPurgeClasses";
 import { TasksProvider } from "./contexts";
 import Top from "./components/Top";
 import { PiArrowBendRightUpBold } from "react-icons/pi";
+import useLocalData from "./hooks/useLocalData";
 
 function App() {
   const [addTaskActive, setAddTaskActive] = useState(false);
-  const [userName, setUserName] = useState("");
-  const [tasks, setTasks] = useState([]);
-
-  const updateUserName = (name) => {
-    setUserName(name);
-  };
+  const [userName, setUserName] = useState(useLocalData().userName);
+  const [tasks, setTasks] = useState(useLocalData().tasks);
 
   const addTask = (task, desc) => {
     setTasks((prev) => [
@@ -46,12 +43,6 @@ function App() {
   };
 
   useEffect(() => {
-    let allData = JSON.parse(localStorage.getItem("taskerData"));
-    updateUserName(allData.userName);
-    if (allData && allData.tasks.length > 0) setTasks(allData.tasks);
-  }, []);
-
-  useEffect(() => {
     localStorage.setItem("taskerData", JSON.stringify({ userName, tasks }));
   }, [tasks, userName]);
 
@@ -59,7 +50,7 @@ function App() {
     <TasksProvider
       value={{
         userName,
-        updateUserName,
+        setUserName,
         tasks,
         addTask,
         updateTask,
@@ -68,7 +59,7 @@ function App() {
       }}
     >
       <TailwindPurgeClasses />
-      <div className="main w-96 sm:w-full h-5/6 sm:h-full bg-slate-950 rounded-2xl sm:rounded-none text-white p-2 pl-4 relative overflow-hidden">
+      <div className="main w-96 sm:w-full h-5/6 sm:h-full bg-slate-950 rounded-2xl sm:rounded-none text-white p-2 pl-4 relative overflow-hidden select-none">
         <Top
           addTaskActive={addTaskActive}
           setAddTaskActive={setAddTaskActive}
