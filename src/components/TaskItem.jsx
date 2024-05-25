@@ -79,7 +79,7 @@ function TaskItem({ task }) {
             dangerouslySetInnerHTML={{ __html: task.desc }}
           ></p>
           {!collapsed && (
-            <div className="options flex justify-between my-2">
+            <div className="options flex justify-between gap-4 my-2">
               {editable ? (
                 <button
                   className="edit w-28 rounded py-1 font-semibold bg-green-600"
